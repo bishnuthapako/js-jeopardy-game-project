@@ -23,7 +23,7 @@ header{
   justify-content: center;
 }
 #heading{
-  font-size: 8em;
+  font-size: 5em;
   color: white;
 }
 #spin-container{
@@ -42,11 +42,11 @@ header{
 
 #jeopardy{
   background-color: rgb(45, 24, 179);
-  width: 70%;
-  height: 60vh;
   display: flex;
-  flex-direction: column;
+  height: auto;
   align-items: center;
+  flex-direction: column;
+  /* justify-content: center; */
   border: 3px solid rgb(248, 245, 245);
 }
 
@@ -62,7 +62,6 @@ h3{
   margin-top: 20px;
   padding: 10px;
 }
-
 
 
 

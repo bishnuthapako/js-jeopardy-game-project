@@ -1,9 +1,12 @@
 // categories is the main data structure for the app; it looks like this:
 
 const $start = $("#start");
+const $jeopardy = $("#jeopardy");
+const $tbody = $("tbody");
 
-$start.click(function(){
 
+$start.click(async function(){
+ await setupAndStart()
 })
 
 
@@ -72,11 +75,16 @@ function shuffleTheArray(arr) {
 async function getCategory(catId) {
     const cat = await axios.get(`https://jservice.io/api/category?id=${catId}`);
     shuffleTheArray(cat.data.clues);
-    const cl = cat.data.clues.splice(0, 2);
-        console.log(cl, 'clue')
+    const clues = cat.data.clues.splice(0, 2).map(clue=>({
+        question: clue.question,
+        answer: clue.answer,
+        showing: null
+    }));
+        // console.log(clue[0].answer, 'answer')
     return {
         title: cat.data.title,
-        clues: {question: cl.question, answer: cl.answer, showing: null }
+        clues: clues
+        // clues: {question: clue.map(clue=> clue.question), answer: clue.map(clue=> clue.answer), showing: null }
     }
 }
 
@@ -88,7 +96,35 @@ async function getCategory(catId) {
  *   (initally, just show a "?" where the question/answer would go.)
  */
 
-async function fillTable() {
+async function fillTable(cat) {
+  //   const table = `( 
+  //   <table class="table">
+  //   <thead>
+  //     <tr style="width: 300px">
+  //       <th>${cat.title}</th>
+  //     </tr>
+  //   </thead>
+  //   <tbody>
+  //   <tr>
+  //     <td>
+  //       ${cat.clues.question}
+  //     </td>
+  //   </tr>
+  // </tbody>
+  // </table>)`
+  // $jeopardy.append(table)
+
+  // <h4 class="text-white mt-4" id="question">${cat.clues.question}</h4>
+  // <h4 id="answer">${cat.clues.answer}</h4> 
+
+  const updateData = `
+    <h3 class="display-6">${cat.title}</h3>
+    <h4 class="text-white mt-4" id="question">${cat.clues[0].question}</h4>
+  <h4 id="answer">${cat.clues[1].answer}</h4> `
+  // const startBtn = document.getElementById("start");
+  // startBtn.style.display = "none";
+  $start.css("display", "none")
+    $jeopardy.append(updateData)
 }
 
 /** Handle clicking on a clue: show the question or answer.
@@ -99,7 +135,7 @@ async function fillTable() {
  * */
 
 function handleClick(evt) {
-    
+    console.log(evt)
 }
 
 /** Wipe the current Jeopardy board, show the loading spinner,
@@ -113,6 +149,7 @@ function showLoadingView() {
 /** Remove the loading spinner and update the button used to fetch data. */
 
 function hideLoadingView() {
+
 }
 
 /** Start game:
@@ -124,13 +161,19 @@ function hideLoadingView() {
 
 async function setupAndStart() {
     const categoryIds = await getCategoryIds();
-    categoryIds.forEach(async id => {
-        const cat = await getCategory(id);
-        console.log(cat, 'cat');
-    })
+    // console.log(categoryIds, 'cateid')
+    // categoryIds.forEach(async id => {
+    //     const cat = await getCategory(id);
+    //    await fillTable(cat)
+    //     console.log(cat.title, 'cat');
+    // })
+    const category = await getCategory(categoryIds)
+    await fillTable(category)
+    console.log(category.clues[0].question, 'clue')
 }
 
 /** On click of start / restart button, set up game. */
+$jeopardy.on("click", handleClick)
 
 // TODO
 
