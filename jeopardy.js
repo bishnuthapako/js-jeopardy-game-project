@@ -97,32 +97,11 @@ async function getCategory(catId) {
  */
 
 async function fillTable(cat) {
-  //   const table = `( 
-  //   <table class="table">
-  //   <thead>
-  //     <tr style="width: 300px">
-  //       <th>${cat.title}</th>
-  //     </tr>
-  //   </thead>
-  //   <tbody>
-  //   <tr>
-  //     <td>
-  //       ${cat.clues.question}
-  //     </td>
-  //   </tr>
-  // </tbody>
-  // </table>)`
-  // $jeopardy.append(table)
-
-  // <h4 class="text-white mt-4" id="question">${cat.clues.question}</h4>
-  // <h4 id="answer">${cat.clues.answer}</h4> 
-
   const updateData = `
     <h3 class="display-6">${cat.title}</h3>
     <h4 class="text-white mt-4" id="question">${cat.clues[0].question}</h4>
   <h4 id="answer">${cat.clues[1].answer}</h4> `
-  // const startBtn = document.getElementById("start");
-  // startBtn.style.display = "none";
+ $jeopardy.css("display", "block")
   $start.css("display", "none")
     $jeopardy.append(updateData)
 }

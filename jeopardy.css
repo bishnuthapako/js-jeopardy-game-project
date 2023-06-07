@@ -48,6 +48,7 @@ header{
   flex-direction: column;
   /* justify-content: center; */
   border: 3px solid rgb(248, 245, 245);
+  display: none;
 }
 
 h3{
