@@ -1,5 +1,15 @@
 // categories is the main data structure for the app; it looks like this:
 
+const $start = $("#start");
+
+$start.click(function(){
+
+})
+
+
+
+
+
 //  [
 //    { title: "Math",
 //      clues: [
@@ -19,16 +29,25 @@
 //  ]
 
 let categories = [];
-
+const NUM_CATEGORIES = 6;
 
 /** Get NUM_CATEGORIES random category from API.
  *
  * Returns array of category ids
  */
 
-function getCategoryIds() {
-  
-    
+async function getCategoryIds() {
+   const res = await axios.get("https://jservice.io/api/categories?count=100");
+  shuffleTheArray(res.data);
+  return res.data.map(c => c.id).splice(1,NUM_CATEGORIES);
+}
+
+function shuffleTheArray(arr) {
+    arr.forEach((val, key) => {
+        randomIndex = Math.ceil(Math.random()*(key + 1));
+        arr[key] = arr[randomIndex];
+        arr[randomIndex] = val;
+      });
 }
 
 // const NUM_CATEGORIES = 10;
@@ -50,7 +69,15 @@ function getCategoryIds() {
  *   ]
  */
 
-function getCategory(catId) {
+async function getCategory(catId) {
+    const cat = await axios.get(`https://jservice.io/api/category?id=${catId}`);
+    shuffleTheArray(cat.data.clues);
+    const cl = cat.data.clues.splice(0, 2);
+        console.log(cl, 'clue')
+    return {
+        title: cat.data.title,
+        clues: {question: cl.question, answer: cl.answer, showing: null }
+    }
 }
 
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
@@ -72,6 +99,7 @@ async function fillTable() {
  * */
 
 function handleClick(evt) {
+    
 }
 
 /** Wipe the current Jeopardy board, show the loading spinner,
@@ -95,6 +123,11 @@ function hideLoadingView() {
  * */
 
 async function setupAndStart() {
+    const categoryIds = await getCategoryIds();
+    categoryIds.forEach(async id => {
+        const cat = await getCategory(id);
+        console.log(cat, 'cat');
+    })
 }
 
 /** On click of start / restart button, set up game. */
