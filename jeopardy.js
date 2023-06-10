@@ -9,6 +9,10 @@ $start.click(async function(){
  await setupAndStart()
 })
 
+$jeopardy.click(function(){
+    // console.log('clicked the jeopardy blue')
+    $("#answer").show()
+})
 
 
 
