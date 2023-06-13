@@ -3,16 +3,15 @@
 const $start = $("#start");
 const $jeopardy = $("#jeopardy");
 const $tbody = $("tbody");
+const $restart = $("#restart");
 
 
-$start.click(async function(){
- await setupAndStart()
-})
 
-$jeopardy.click(function(){
-    // console.log('clicked the jeopardy blue')
-    $("#answer").show()
-})
+
+// $jeopardy.click(function(){
+//     // console.log('clicked the jeopardy blue')
+//     $("#answer").show()
+// })
 
 
 
@@ -107,6 +106,8 @@ async function fillTable(cat) {
   <h4 id="answer">${cat.clues[1].answer}</h4> `
  $jeopardy.css("display", "block")
   $start.css("display", "none")
+//   $jeopardy.css("display", "none")
+$("#heading").css("display", "none")
     $jeopardy.append(updateData)
 }
 
@@ -118,7 +119,9 @@ async function fillTable(cat) {
  * */
 
 function handleClick(evt) {
-    console.log(evt)
+    $("#answer").show()
+    console.log(evt.target)
+    console.log("clicked")
 }
 
 /** Wipe the current Jeopardy board, show the loading spinner,
@@ -152,11 +155,16 @@ async function setupAndStart() {
     // })
     const category = await getCategory(categoryIds)
     await fillTable(category)
-    console.log(category.clues[0].question, 'clue')
+    // console.log(category.clues[0].question, 'clue');
 }
 
 /** On click of start / restart button, set up game. */
-$jeopardy.on("click", handleClick)
+
+$start.click(async function(){
+    await setupAndStart()
+    $("#answer").hide();
+    $jeopardy.on("click",handleClick)
+   })
 
 // TODO
 
