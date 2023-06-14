@@ -5,7 +5,8 @@ const $jeopardy = $("#jeopardy");
 const $tbody = $("tbody");
 const $restart = $("#restart");
 
-
+let currentClueIdx = 0;
+let currentCategoryIdx = 0;
 
 
 // $jeopardy.click(function(){
@@ -99,16 +100,49 @@ async function getCategory(catId) {
  *   (initally, just show a "?" where the question/answer would go.)
  */
 
-async function fillTable(cat) {
-  const updateData = `
-    <h3 class="display-6">${cat.title}</h3>
-    <h4 class="text-white mt-4" id="question">${cat.clues[0].question}</h4>
-  <h4 id="answer">${cat.clues[1].answer}</h4> `
- $jeopardy.css("display", "block")
-  $start.css("display", "none")
-//   $jeopardy.css("display", "none")
-$("#heading").css("display", "none")
-    $jeopardy.append(updateData)
+async function fillTable(cats) {
+    // loop each category
+    for (let i = 0; i < cats.length; i++) {
+        const cat = cats[i];
+        // console.log(cat, 'catI')
+
+        //loop each clue
+        for (let j = 0; j < cat.clues.length; j++) {
+            const clue = cat.clues[j];
+            
+            // create q&a
+            const qaContainer = document.createElement("div");
+            qaContainer.classList.add("qa-container");
+            const qaContent = `
+                    <h3 class="display-6">${cat.title}</h3>
+                    <h4 class="text-white mt-4" id="question-${i}-${j}">${clue.question}</h4>
+                    <h4 id="answer-${i}-${j}" class="answer" style="display:none">${clue.answer}</h4>
+            `;
+            qaContainer.innerHTML = qaContent;
+            qaContainer.style.display = "none";
+
+            // Show the first one only
+            if ( i === 0 && j === 0) {
+                qaContainer.style.display = "block";
+            }
+
+            qaContainer.addEventListener("click", handleClick);
+            $jeopardy.append(qaContainer)
+        }
+    }
+  
+//   currentClueIdx++;
+//   console.log(currentClueIdx, 'currIdx');
+
+//   if(currentClueIdx === cat.clues.length){
+//     console.log("next category")
+//   }
+
+//                 $jeopardy.css("display", "block")
+//                 // $start.css("display", "none")
+//                 $("#heading").css("display", "none")
+
+//     $jeopardy.append(updateData)
 }
 
 /** Handle clicking on a clue: show the question or answer.
@@ -119,9 +153,7 @@ $("#heading").css("display", "none")
  * */
 
 function handleClick(evt) {
-    $("#answer").show()
-    console.log(evt.target)
-    console.log("clicked")
+    console.log(evt.target.parentNode.childNodes)
 }
 
 /** Wipe the current Jeopardy board, show the loading spinner,
@@ -147,27 +179,30 @@ function hideLoadingView() {
 
 async function setupAndStart() {
     const categoryIds = await getCategoryIds();
-    // console.log(categoryIds, 'cateid')
-    // categoryIds.forEach(async id => {
-    //     const cat = await getCategory(id);
-    //    await fillTable(cat)
-    //     console.log(cat.title, 'cat');
-    // })
-    const category = await getCategory(categoryIds)
-    await fillTable(category)
-    // console.log(category.clues[0].question, 'clue');
+    for (let i = 0; i < categoryIds.length; i++) {
+        const cat = await getCategory(categoryIds[i]);
+        categories.push(cat);
+    }
+    console.log(categories)
+    await fillTable(categories);
 }
 
 /** On click of start / restart button, set up game. */
 
-$start.click(async function(){
+$start.on("click", async function(){
     await setupAndStart()
-    $("#answer").hide();
-    $jeopardy.on("click",handleClick)
+    $jeopardy.show()
+    // $("#answer").hide();
+    // $jeopardy.on("click",handleClick)
    })
+
+
 
 // TODO
 
 /** On page load, add event handler for clicking clues */
 
 // TODO
+
+
+

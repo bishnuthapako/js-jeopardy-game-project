@@ -51,6 +51,10 @@ header{
   display: none;
 }
 
+.qa-container .questions{
+  display: none;
+}
+
 h3{
   color: white;
   margin-top: 20px;
