@@ -62,11 +62,11 @@ h3{
 #question{
   padding: 20px;
 }
-#answer{
-  color: yellow;
+.answer{
+  color: white;
   margin-top: 20px;
   padding: 10px;
-  /* display: none; */
+  /* display: block; */
 }
 
 
