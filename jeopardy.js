@@ -3,29 +3,9 @@
 const $start = $("#start");
 const $jeopardy = $("#jeopardy");
 const $tbody = $("tbody");
-const $restart = $("#restart");
 
 let currentClueIdx = 0;
 let currentCategoryIdx = 0;
-
-
-//  [
-//    { title: "Math",
-//      clues: [
-//        {question: "2+2", answer: 4, showing: null},
-//        {question: "1+1", answer: 2, showing: null}
-//        ...
-//      ],
-//    },
-//    { title: "Literature",
-//      clues: [
-//        {question: "Hamlet Author", answer: "Shakespeare", showing: null},
-//        {question: "Bell Jar Author", answer: "Plath", showing: null},
-//        ...
-//      ],
-//    },
-//    ...
-//  ]
 
 let categories = [];
 const NUM_CATEGORIES = 6;
@@ -87,21 +67,25 @@ async function getCategory(catId) {
  */
 
 function fillTable(cat, cl) {
-    // create q&a
-    const qaContainer = document.createElement("div");
-    qaContainer.classList.add("qa-container");
-    const qaContent = `
-            <h3 class="display-6 title">${cat.title}</h3>
-            <h4 class="text-white mt-4 question">${cl.question}</h4>
-            <h4 class="answer" style="display:none">${cl.answer}</h4>
-    `;
-    qaContainer.innerHTML = qaContent;
-
-    cl.showing = "question"; // Since we are showing this, make it showing=question
-
-    qaContainer.addEventListener("click", handleClick);
-    $jeopardy.append(qaContainer)
-}
+    const section = $("#jeopardy");
+    $('.cat-container').remove();
+    const catDiv = $(`<div class="cat-container"></div>`);
+    const title = $(`<h2 class="title">${cat.title}</h2>`);
+    const quest = $(`<p class="question content">Q: ${cl.question}?</p>`);
+    const ans = $(`<p class="answer content">A: ${cl.answer}</p>`);
+  
+    cl.showing = "question"; // Default: question is shown first
+    ans.hide();
+  
+    catDiv.append(title);
+    catDiv.append(quest);
+    catDiv.append(ans);
+  
+    catDiv.on("click", handleClick);
+  
+    section.append(catDiv); 
+  }
+  
 
 /** Handle clicking on a clue: show the question or answer.
  * Uses .showing property on clue to determine what to show:
@@ -111,43 +95,64 @@ function fillTable(cat, cl) {
  * */
 
 function handleClick(evt) {
-    categories.forEach(cat => {
-        let flag = false;
-        cat.clues.forEach(cl => {
-            console.log(cl.question);
-            if (cl.showing === null) {
-                fillTable(cat, cl);
-                flag = true;
-                return;
-            }
+    // Ren: I went for simple for loop. Because returning/breaking forEach is impossible
+    // Ren: Each time we click, we loop through the array and look for `showing`
+    // If question, we show answer
+    // If null, we render new question
+    // If answer, we just ignore
+    // Each loop we check if we reached last question or not and display Gameover!
+    for (let i = 0; i < categories.length; i++) {
+      const cat = categories[i];
+      console.log(cat, 'cat-i')
+      let exit = false;
+      for (let j = 0; j < cat.clues.length; j++) {
+        const cl = cat.clues[j];
 
-            if (cl.showing === "answer") {
-                $('.qa-container').remove();
-                console.log("removed.....")
-                return;
-            }
-
-            if (cl.showing === "question") {
-                $('.answer').show();
-                cl.showing = "answer";
-            }
-        })
-        if (flag) return;
-    })
-}
+        // console.log(cl.showing, 'showing')
+  
+        if (cl.showing == "question") {
+          $('.answer').show();
+        //   $('.question').hide();
+          cl.showing = "answer";
+          return;
+        }
+  
+        if (cl.showing == null) {
+          fillTable(cat, cl);
+          exit = true;
+          return;
+        }
+  
+        if (i === categories.length - 1 && j === cat.clues.length - 1) {
+          alert("Gameover!");
+          $("#heading").show()
+          $start.show();
+          $start.text("Restart")
+          
+          $('.cat-container').remove();
+          $jeopardy.hide();
+          location.reload()
+        }
+      }
+  
+      if (exit) return;
+    }
+  }
 
 /** Wipe the current Jeopardy board, show the loading spinner,
  * and update the button used to fetch data.
  */
 
 function showLoadingView() {
-
+    $("#loading").show();
+    $start.prop('disabled', true)
 }
 
 /** Remove the loading spinner and update the button used to fetch data. */
 
 function hideLoadingView() {
-
+$("#loading").hide();
+$start.prop('disabled', false)
 }
 
 /** Start game:
@@ -170,7 +175,12 @@ async function setupAndStart() {
 /** On click of start / restart button, set up game. */
 
 $start.on("click", async function(){
+    showLoadingView();
+    $start.hide();
+   $("#heading").hide()
     await setupAndStart()
+    $start.text("Restart")
+    hideLoadingView()
     $jeopardy.show()
     // $("#answer").hide();
     // $jeopardy.on("click",handleClick)

@@ -59,8 +59,9 @@ h3{
   color: white;
   margin-top: 20px;
 }
-#question{
+.question{
   padding: 20px;
+  color:antiquewhite;
 }
 .answer{
   color: white;
@@ -68,7 +69,13 @@ h3{
   padding: 10px;
   /* display: block; */
 }
-
+.title{
+  color:aliceblue;
+}
+#loading{
+  display: none;
+  color:white;
+}
 
 
 
