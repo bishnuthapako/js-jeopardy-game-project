@@ -126,9 +126,7 @@ function handleClick(evt) {
         if (i === categories.length - 1 && j === cat.clues.length - 1) {
           alert("Gameover!");
           $("#heading").show()
-          $start.show();
-          $start.text("Restart")
-          
+          $start.show().text("Restart");
           $('.cat-container').remove();
           $jeopardy.hide();
           location.reload()
@@ -179,7 +177,6 @@ $start.on("click", async function(){
     $start.hide();
    $("#heading").hide()
     await setupAndStart()
-    $start.text("Restart")
     hideLoadingView()
     $jeopardy.show()
     // $("#answer").hide();
