@@ -25,9 +25,9 @@ After all the questions have been answered, the game ends. The player has the op
 - jQuery
 ### Contact
 Your Name - Bishnu Thapa
-Email: bishnuthapako@gmail.com
-Project Link: https://github.com/bishnuthapako/js-jeopardy-game-project
-Page: https://bishnuthapako.github.io/js-jeopardy-game-project
+Email: bishnuthapako@gmail.com <br />
+Project Link: https://github.com/bishnuthapako/js-jeopardy-game-project <br />
+Page: https://bishnuthapako.github.io/js-jeopardy-game-project <br />
 
 
 
