@@ -1,8 +1,4 @@
-# js-jeopardy-game-project
-github Repo: https://github.com/bishnuthapako/js-jeopardy-game-project
-
-
-## Jeopardy Game with JavaScript & jQuery
+# Jeopardy Game with JavaScript & jQuery
 ### Overview
 This project is a Jeopardy game implemented in JavaScript & jQuery. The game fetches data using http://jservice.io, and presents 6 categories & each category has two questions and their corresponding answers, along with a title for the category. The game finishes once all categories have been played, after which it can be restarted.
 ## Getting Started
